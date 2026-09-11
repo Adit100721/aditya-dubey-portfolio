@@ -1,6 +1,7 @@
 /* A local 3D developer workbench. Every response is an illustrative offline demo. */
 (() => {
   'use strict';
+  const t = window.portfolioI18n?.t || (value => value);
   const root = document.querySelector('.developer-lab');
   if (!root) return;
   const stage = root.querySelector('.developer-stage');
@@ -32,12 +33,13 @@
   };
   try { if (localStorage.getItem('aditya-portfolio-developer-motion') === 'paused') motion = false; } catch {}
 
-  function announce(value) { if (status) status.textContent = value; }
+  let lastAnnouncement = viewDescriptions.code;
+  function announce(value) { lastAnnouncement = value; if (status) status.textContent = t(value); }
   function buttonText(button, value) {
     if (!button) return;
     const label = button.querySelector('[data-control-label], .control-label, .motion-label');
-    if (label) label.textContent = value;
-    else button.textContent = value;
+    if (label) label.textContent = t(value);
+    else button.textContent = t(value);
   }
   function moving() { return motion && !reduced.matches; }
   function controls() {
@@ -50,17 +52,21 @@
     }
     if (runButton) {
       runButton.disabled = !ready || running;
-      runButton.setAttribute('aria-label', running ? 'Request demo is running' : 'Run request demo');
+      runButton.setAttribute('aria-label', t(running ? 'Request demo is running' : 'Run request demo'));
       buttonText(runButton, running ? 'Running demo…' : 'Run demo');
     }
     if (resetButton) resetButton.disabled = !ready;
     if (motionButton) {
       motionButton.disabled = !ready || reduced.matches;
       motionButton.setAttribute('aria-pressed', String(moving()));
-      motionButton.setAttribute('aria-label', reduced.matches ? 'Motion disabled by your reduced-motion preference' : moving() ? 'Pause ambient motion' : 'Play ambient motion');
+      motionButton.setAttribute('aria-label', t(reduced.matches ? 'Motion disabled by your reduced-motion preference' : moving() ? 'Pause ambient motion' : 'Play ambient motion'));
       buttonText(motionButton, reduced.matches ? 'Motion off' : moving() ? 'Pause motion' : 'Play motion');
     }
   }
+  window.addEventListener('portfolio:languagechange', () => {
+    controls(); announce(lastAnnouncement);
+    if (ready && !lost && !disposed) { refreshTextures(); schedule(); }
+  });
   function fail(message) {
     ready = false;
     running = false;
@@ -122,7 +128,7 @@
   }
   function line(ctx, value, x, y, color, size = 43, weight = 500) {
     ctx.font = `${weight} ${size}px Consolas, 'Courier New', monospace`;
-    ctx.fillStyle = color; ctx.fillText(value, x, y);
+    ctx.fillStyle = color; ctx.fillText(t(value), x, y, Math.max(1, ctx.canvas.width - x - 24));
   }
   function pieces(ctx, entries, x, y, size = 48) {
     let cursor = x;
