@@ -1,6 +1,7 @@
 /* Shared portfolio theme and interactions. */
 (() => {
   const root = document.documentElement;
+  const t = window.portfolioI18n?.t || (value => value);
   const themeToggle = document.querySelector('[data-theme-toggle]');
   const themeLabel = document.querySelector('[data-theme-label]');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -9,13 +10,14 @@
   function applyTheme(theme, persist = true) {
     const dark = theme === 'dark';
     root.dataset.theme = dark ? 'dark' : 'light';
-    themeToggle.setAttribute('aria-label', dark ? 'Go light: switch to blue and white theme' : 'Go dark: switch to Slate Ice theme');
-    themeToggle.title = dark ? 'Slate Ice — switch to blue & white' : 'Blue & white — switch to Slate Ice';
-    themeLabel.textContent = dark ? 'Go light' : 'Go dark';
+    themeToggle.setAttribute('aria-label', t(dark ? 'Go light: switch to blue and white theme' : 'Go dark: switch to Slate Ice theme'));
+    themeToggle.title = t(dark ? 'Slate Ice — switch to blue & white' : 'Blue & white — switch to Slate Ice');
+    themeLabel.textContent = t(dark ? 'Go light' : 'Go dark');
     document.querySelector('meta[name="theme-color"]').content = dark ? '#111820' : '#1747e8';
     if (persist) { try { localStorage.setItem('aditya-portfolio-theme', dark ? 'dark' : 'light'); } catch {} }
   }
   applyTheme(root.dataset.theme, false);
+  window.addEventListener('portfolio:languagechange', () => { applyTheme(root.dataset.theme, false); scheduleProgress(); });
   themeToggle.addEventListener('click', () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
   window.addEventListener('storage', event => { if (event.key === 'aditya-portfolio-theme') applyTheme(event.newValue, false); });
 

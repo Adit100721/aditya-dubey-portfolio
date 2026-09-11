@@ -1,5 +1,11 @@
 # Aditya Dubey — Software Developer
 
+[Portfolio in English](https://adit100721.github.io/aditya-dubey-portfolio/?lang=en) · [Portfolio auf Deutsch](https://adit100721.github.io/aditya-dubey-portfolio/?lang=de)
+
+Use EN / DE in the header or an open project story to switch languages. The site remembers a visitor's choice. A `?lang=en` or `?lang=de` link takes priority; new visitors without a saved choice see German when their browser's primary language is German, and English otherwise. The downloadable résumé remains in English.
+
+German copy lives in `assets/translations-de.js`, with English phrases as keys. Keep both versions aligned when editing English copy in `index.html`. The language switch uses local static files and needs no translation service or backend. `assets/i18n.js` manages the language choice; `assets/i18n.css` styles its controls.
+
 A personal portfolio featuring core banking APIs, OBP middleware, API lifecycle orchestration, HDFC Net Banking engineering, and customer-data migration work.
 
 The website includes a 3D developer workspace, blue-and-white and Slate Ice themes, project case studies, contact links, and a downloadable résumé.
